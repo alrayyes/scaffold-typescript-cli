@@ -12,8 +12,7 @@ The GitHub-native sibling of the Forgejo template at
 Same chassis, prose tooling, docs and TypeScript/bun CLI as that template,
 with the CI/release/dependency-bot layer swapped for GitHub-native tooling:
 `.github/workflows/` instead of `.forgejo/workflows/`, release-please
-instead of semantic-release, Dependabot instead of Renovate. See
-[FORGEJO.md](FORGEJO.md) for the reverse swap.
+instead of semantic-release, Dependabot instead of Renovate.
 
 ## Commands
 
