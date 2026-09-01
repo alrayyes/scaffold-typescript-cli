@@ -1,0 +1,46 @@
+# Product and tool names, spelled the way their owners spell them. Vale.Terms
+# holds the prose to exactly these, so casing here is the casing everywhere.
+Codecov
+Dependabot
+Forgejo
+GHCR
+GitHub
+Biome
+bundler
+JavaScript
+bun
+bunx
+lefthook
+markdownlint
+commitlint
+Renovate
+allowlist
+changelog
+ruleset
+rulesets
+runbook
+unmergeable
+misconfiguration
+misspelt
+fixups
+repos?
+toolchain
+toolchains
+whoever's
+bot's
+autodiscover
+automerge
+devDependencies
+stdin
+CI
+YAML
+JSON
+config
+unconfigured
+dind
+npm
+
+# Not "TypeScript" or "CLI": both are substrings of this repo's own name,
+# scaffold-typescript-cli, and Vale.Terms would flag the lowercase form in
+# the README's H1 every time. Left to writer discipline in body prose
+# instead, same reason "Go" is missing from scaffold-go-cli's list.

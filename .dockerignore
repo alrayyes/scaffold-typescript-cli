@@ -1,0 +1,12 @@
+# Everything the runtime doesn't need. Without this the build context pulls
+# in node_modules, .git and Vale's style packages — the daemon has to hash
+# and send all of it before the first instruction even runs.
+.git/
+.github/
+node_modules/
+.bun-cache/
+styles/Google/
+styles/proselint/
+*.test.ts
+coverage/
+*.md

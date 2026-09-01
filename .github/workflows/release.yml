@@ -1,0 +1,61 @@
+# Nobody picks a version. release-please reads the Conventional Commits that
+# land on main and keeps a release pull request open carrying the next
+# version and the changelog entry; merging that pull request tags the
+# release and writes the notes. The docker-image job then publishes the CLI
+# image already built into the release already sitting there.
+name: release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write # tags the release and writes it
+      pull-requests: write # keeps the release pull request up to date
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  # cli.md: every CLI tool built here also ships a Docker image alongside its
+  # native release, so `docker run <image> <args>` works the same as running
+  # the script directly. GHCR, authenticated with the workflow's own
+  # GITHUB_TOKEN (packages: write) — no separate registry secret to mint or
+  # rotate, unlike the Forgejo scaffold's RELEASE_TOKEN-based login against
+  # this account's own registry.
+  docker-image:
+    needs: release-please
+    if: needs.release-please.outputs.release_created == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.release-please.outputs.tag_name }}
+      - name: Log in to ghcr.io
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+      - run: |
+          set -eu
+          tag="${{ needs.release-please.outputs.tag_name }}"
+          version="${tag#v}"
+          image="ghcr.io/${{ github.repository }}"
+          docker build -t "${image}:${version}" -t "${image}:latest" .
+          docker push "${image}:${version}"
+          docker push "${image}:latest"
