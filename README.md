@@ -16,10 +16,6 @@ exists so the whole chain — the script, its tests, hooks, CI — has
 something real to run against. Replace it with your first real command and
 delete this paragraph.
 
-The tooling here defaults to GitHub: release-please, Dependabot,
-`.github/workflows/`. Stamping a project onto Forgejo instead? See
-[FORGEJO.md](FORGEJO.md) for what to swap in.
-
 ## Requirements
 
 - **[bun](https://bun.sh) 1.3 or newer.** It's the runtime, the test
