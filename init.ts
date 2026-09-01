@@ -10,6 +10,12 @@ const STARTER_CONFIG = `# scaffold-typescript-cli config file.
 # whatever's set here — see 'scaffold-typescript-cli --help'.
 
 verbose: false
+
+# api_token is this scaffold's example credential field. Never put the
+# literal value here — use api_token_command instead, so the secret comes
+# from a command's output rather than sitting in plaintext on disk. If both
+# are set, the command wins.
+# api_token_command: hush-hush get scaffold-typescript-cli-api-token
 `;
 
 export async function writeStarterConfig(force: boolean, path = configFilePath()): Promise<string> {

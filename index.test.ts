@@ -2,7 +2,14 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { existsSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { configFilePath, loadConfig, VERBOSE_ENV_VAR } from "./config";
+import {
+  API_TOKEN_COMMAND_ENV_VAR,
+  API_TOKEN_ENV_VAR,
+  configFilePath,
+  loadConfig,
+  resolveSecret,
+  VERBOSE_ENV_VAR,
+} from "./config";
 import { greet } from "./index";
 import { writeStarterConfig } from "./init";
 
@@ -34,8 +41,10 @@ describe("loadConfig", () => {
     else process.env[VERBOSE_ENV_VAR] = originalVerboseEnv;
   });
 
+  const noFlags = { verbose: undefined, apiToken: undefined, apiTokenCommand: undefined };
+
   test("defaults to false with nothing set", async () => {
-    expect((await loadConfig(undefined)).verbose).toBe(false);
+    expect((await loadConfig(noFlags)).verbose).toBe(false);
   });
 
   test("reads the config file when no flag or env var overrides it", async () => {
@@ -43,20 +52,84 @@ describe("loadConfig", () => {
     const path = configFilePath();
     await Bun.write(path, "verbose: true\n");
 
-    expect((await loadConfig(undefined)).verbose).toBe(true);
+    expect((await loadConfig(noFlags)).verbose).toBe(true);
   });
 
   test("the environment overrides the config file", async () => {
     await Bun.write(configFilePath(), "verbose: true\n", { createPath: true });
     process.env[VERBOSE_ENV_VAR] = "false";
 
-    expect((await loadConfig(undefined)).verbose).toBe(false);
+    expect((await loadConfig(noFlags)).verbose).toBe(false);
   });
 
   test("the flag overrides the environment", async () => {
     process.env[VERBOSE_ENV_VAR] = "true";
 
-    expect((await loadConfig(false)).verbose).toBe(false);
+    expect((await loadConfig({ ...noFlags, verbose: false })).verbose).toBe(false);
+  });
+});
+
+describe("resolveSecret", () => {
+  test("falls through to the literal exactly as before when no command is set", async () => {
+    expect(await resolveSecret("literal-token", undefined)).toBe("literal-token");
+    expect(await resolveSecret(undefined, undefined)).toBeUndefined();
+  });
+
+  test("the command wins over the literal when both are set", async () => {
+    expect(await resolveSecret("literal-token", "echo command-token")).toBe("command-token");
+  });
+
+  test("trims exactly one trailing newline from the command's stdout", async () => {
+    expect(await resolveSecret(undefined, "printf 'token\\n\\n'")).toBe("token\n");
+  });
+
+  test("a failing command raises a real error rather than an empty credential", async () => {
+    await expect(resolveSecret(undefined, "exit 1")).rejects.toThrow('command "exit 1" exited 1');
+  });
+});
+
+describe("loadConfig secrets", () => {
+  let originalConfigHome: string | undefined;
+  let originalApiToken: string | undefined;
+  let originalApiTokenCommand: string | undefined;
+
+  beforeEach(() => {
+    originalConfigHome = process.env.XDG_CONFIG_HOME;
+    originalApiToken = process.env[API_TOKEN_ENV_VAR];
+    originalApiTokenCommand = process.env[API_TOKEN_COMMAND_ENV_VAR];
+    process.env.XDG_CONFIG_HOME = mkdtempSync(join(tmpdir(), "scaffold-typescript-cli-test-"));
+    delete process.env[API_TOKEN_ENV_VAR];
+    delete process.env[API_TOKEN_COMMAND_ENV_VAR];
+  });
+
+  afterEach(() => {
+    if (originalConfigHome === undefined) delete process.env.XDG_CONFIG_HOME;
+    else process.env.XDG_CONFIG_HOME = originalConfigHome;
+    if (originalApiToken === undefined) delete process.env[API_TOKEN_ENV_VAR];
+    else process.env[API_TOKEN_ENV_VAR] = originalApiToken;
+    if (originalApiTokenCommand === undefined) delete process.env[API_TOKEN_COMMAND_ENV_VAR];
+    else process.env[API_TOKEN_COMMAND_ENV_VAR] = originalApiTokenCommand;
+  });
+
+  const noFlags = { verbose: undefined, apiToken: undefined, apiTokenCommand: undefined };
+
+  test("no command set falls through to the literal from the environment", async () => {
+    process.env[API_TOKEN_ENV_VAR] = "env-token";
+
+    expect((await loadConfig(noFlags)).apiToken).toBe("env-token");
+  });
+
+  test("the command wins over the literal across layers", async () => {
+    process.env[API_TOKEN_ENV_VAR] = "env-token";
+    process.env[API_TOKEN_COMMAND_ENV_VAR] = "echo command-token";
+
+    expect((await loadConfig(noFlags)).apiToken).toBe("command-token");
+  });
+
+  test("a failing command surfaces as a rejected loadConfig call", async () => {
+    process.env[API_TOKEN_COMMAND_ENV_VAR] = "exit 1";
+
+    await expect(loadConfig(noFlags)).rejects.toThrow();
   });
 });
 
@@ -166,5 +239,39 @@ describe("CLI", () => {
     const result = runCli(["--yes", "--name", "Ada"]);
 
     expect(result.stdout.toString()).toContain("Wrote");
+  });
+});
+
+describe("CLI secrets", () => {
+  function runCli(args: string[], env: Record<string, string> = {}) {
+    return Bun.spawnSync(["bun", "run", "index.ts", "--yes", ...args], {
+      cwd: import.meta.dir,
+      env: {
+        ...process.env,
+        XDG_CONFIG_HOME: mkdtempSync(join(tmpdir(), "scaffold-typescript-cli-test-")),
+        ...env,
+      },
+    });
+  }
+
+  test("--api-token-command wins over --api-token", () => {
+    const result = runCli([
+      "--api-token",
+      "literal-token",
+      "--api-token-command",
+      "echo command-token",
+      "--verbose",
+      "--name",
+      "Ada",
+    ]);
+
+    expect(result.exitCode).toBe(0);
+  });
+
+  test("a failing --api-token-command exits non-zero with a real error, not a blank credential", () => {
+    const result = runCli(["--api-token-command", "exit 1"]);
+
+    expect(result.exitCode).not.toBe(0);
+    expect(result.stderr.toString()).toContain("exit 1");
   });
 });

@@ -36,6 +36,11 @@ export function buildProgram(): Command {
     .option("--name <name>", "name to greet", "world")
     .option("--verbose", "enable verbose output")
     .option("--no-verbose", "disable verbose output, overriding the environment or config file")
+    .option("--api-token <token>", "example credential (prefer --api-token-command)")
+    .option(
+      "--api-token-command <command>",
+      "command whose trimmed stdout is the credential; wins over --api-token",
+    )
     .option("-y, --yes", "answer yes to the first-run config prompt without asking")
     .hook("preAction", async (thisCommand, actionCommand) => {
       // init has its own reason for existing; asking it to run itself first
@@ -53,7 +58,11 @@ export function buildProgram(): Command {
       );
     })
     .action(async (opts) => {
-      const cfg = await loadConfig(opts.verbose as boolean | undefined);
+      const cfg = await loadConfig({
+        verbose: opts.verbose as boolean | undefined,
+        apiToken: opts.apiToken as string | undefined,
+        apiTokenCommand: opts.apiTokenCommand as string | undefined,
+      });
       console.log(greet(opts.name as string, cfg.verbose));
     });
 

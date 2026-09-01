@@ -57,6 +57,27 @@ precedence. `--verbose` / `SCAFFOLD_TYPESCRIPT_CLI_VERBOSE` / `verbose:
 true` all do the same thing; `--no-verbose` overrides either of the other
 two back off.
 
+`api_token` is this scaffold's example credential field, and it takes two
+forms — the literal value, and a sibling field, `api_token_command`, that
+runs a command and uses its trimmed stdout instead:
+
+```yaml
+# literal, in config.yaml — fine for something that isn't actually secret
+api_token: a-plain-value
+
+# or piped through a command — the way an actual secret should be handled
+api_token_command: hush-hush get scaffold-typescript-cli-api-token
+```
+
+The same pair works as flags (`--api-token`, `--api-token-command`) or
+environment variables (`SCAFFOLD_TYPESCRIPT_CLI_API_TOKEN`,
+`SCAFFOLD_TYPESCRIPT_CLI_API_TOKEN_COMMAND`). If both forms are set, the
+command wins. The command runs through the shell, so a pipeline works
+unmodified; a non-zero exit is a hard error rather than a silent empty
+credential. `init` never writes a literal secret into the config it
+generates — the starter file leaves `api_token_command` commented out as an
+example instead.
+
 A Docker image ships alongside the script — no bun install needed:
 
 ```sh
