@@ -37,6 +37,9 @@ pre-commit:
       glob: "*.md"
       exclude:
         - "CHANGELOG.md"
+        # `openspec init`'s generated skill/command docs — somebody else's
+        # docs, held to somebody else's rules.
+        - ".claude/**"
       run: vale {staged_files}
 
     # Pinned by digest rather than `latest`, like any other container image —

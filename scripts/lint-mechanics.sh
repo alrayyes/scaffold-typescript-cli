@@ -43,8 +43,9 @@ fi
 export JAVA_HOME="$jdk"
 
 # CHANGELOG.md is written by the release job; correcting it is not this
-# script's business.
-files=$(git ls-files '*.md' | grep -v '^CHANGELOG.md$')
+# script's business. .claude/ is `openspec init`'s generated skill/command
+# docs — somebody else's docs, held to somebody else's rules.
+files=$(git ls-files '*.md' | grep -v '^CHANGELOG.md$' | grep -v '^\.claude/')
 
 echo "Checking:"
 echo "$files"
