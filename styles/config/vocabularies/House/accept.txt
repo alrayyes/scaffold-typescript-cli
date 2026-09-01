@@ -32,6 +32,7 @@ autodiscover
 automerge
 devDependencies
 stdin
+stdout
 CI
 YAML
 JSON
