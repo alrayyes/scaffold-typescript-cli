@@ -12,6 +12,9 @@ ignores:
   # held to somebody else's rules.
   - "styles/Google/**"
   - "styles/proselint/**"
+  # `openspec init`'s generated skill/command docs. Also somebody else's
+  # docs — OpenSpec's own house style, not this repo's.
+  - ".claude/**"
 
 config:
   # markdownlint/style/prettier drops MD013 because Prettier reflows prose on

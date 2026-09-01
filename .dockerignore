@@ -3,6 +3,8 @@
 # and send all of it before the first instruction even runs.
 .git/
 .github/
+.claude/
+openspec/
 node_modules/
 .bun-cache/
 styles/Google/
