@@ -1,0 +1,110 @@
+# The gate. Every command in here has a twin in lefthook.yml, so a green
+# pre-commit means a green pipeline and neither can drift into being the only
+# place a rule is enforced.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: package.json
+      - name: bun install
+        run: bun install --frozen-lockfile
+      - name: biome check
+        run: bun run lint
+      - name: sort-package-json --check
+        run: bun run sort-package-json:check
+
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: package.json
+      - name: bun install
+        run: bun install --frozen-lockfile
+      - name: bun test
+        run: bun test --coverage --coverage-reporter=lcov
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage/lcov.info
+          # No CODECOV_TOKEN minted for this repo yet — see the README's
+          # Codecov badge and CLAUDE.md's gotchas. false until one is set, so
+          # a missing secret doesn't fail every run on that basis alone; flip
+          # to true once the token is a real repo secret.
+          fail_ci_if_error: false
+
+  # Layout and structure. Style and mechanics are prose.yml.
+  prose:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: package.json
+      - name: bun install
+        run: bun install --frozen-lockfile
+      - name: prettier --check
+        run: bun run format:check
+      - name: markdownlint
+        run: bun run lint:md
+
+  # The pinned digest matches the one lefthook.yml's pre-commit hook runs, so
+  # the two cannot disagree about the version.
+  dockerfile:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: hadolint
+        run: >-
+          docker run --rm -i
+          -v ${{ github.workspace }}/.hadolint.yaml:/.hadolint.yaml
+          hadolint/hadolint@sha256:32dac94127fd60b7b7e3fbfc65e1383b9b5e25c9bfd7b8536de7a539fe68a12d
+          < Dockerfile
+
+  # Proves the image still builds before anyone merges, without publishing
+  # anything — ubuntu-24.04 ships Docker directly, unlike Forgejo's
+  # docker-in-docker runner, so there's no daemon-discovery step needed here.
+  docker-build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: docker build -t scaffold-typescript-cli:ci-check .
+
+  # A hook is something you can skip, and the version number depends on
+  # these messages being right, so the whole branch is checked here too.
+  commits:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: package.json
+      - run: bun install --frozen-lockfile
+      - name: commitlint
+        run: |
+          bunx commitlint \
+            --from "${{ github.event.pull_request.base.sha }}" \
+            --to "${{ github.event.pull_request.head.sha }}" \
+            --verbose
