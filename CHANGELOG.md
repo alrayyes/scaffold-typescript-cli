@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.1.0...scaffold-typescript-cli-v0.1.1) (2026-09-01)
+
+
+### Bug Fixes
+
+* **ci:** exclude release-please's manifest from Biome formatting ([#9](https://github.com/alrayyes/scaffold-typescript-cli/issues/9)) ([4e96423](https://github.com/alrayyes/scaffold-typescript-cli/commit/4e96423de9b9645d17086b7bba3efa62f5a85d87))
+
 ## [0.1.0](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.1.0...scaffold-typescript-cli-v0.1.0) (2026-09-01)
 
 
