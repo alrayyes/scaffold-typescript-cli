@@ -17,8 +17,12 @@ permissions:
   pull-requests: read
   statuses: write
 
+# github.ref, not the pattern the other two workflows use: on
+# pull_request_target it resolves to the base branch, the same for every
+# pull request, so grouping on it would let one pull request's push cancel
+# an unrelated pull request's check.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: pr-title-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
