@@ -3,7 +3,7 @@
 # language's Dockerfile, there's no toolchain stage to discard, only
 # devDependencies (biome, lefthook, semantic-release, ...) this stage never
 # installs in the first place.
-FROM oven/bun:1.4.0-alpine@sha256:07235578f79ef8c6f97d94aee7938e76f5cdba5f21ae5dbfdd3d3d38058437eb
+FROM oven/bun:1.4.2-alpine@sha256:d888c0ae6c86d7866ff10c5aafdd9077b36aee6455b33dd270fb93c0dd5cef6f
 
 WORKDIR /app
 
