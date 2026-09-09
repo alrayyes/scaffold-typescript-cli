@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.2](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.1.1...scaffold-typescript-cli-v0.1.2) (2026-09-09)
+
+
+### Bug Fixes
+
+* **deps:** bump oven/bun from 1.4.0-alpine to 1.4.2-alpine ([#18](https://github.com/alrayyes/scaffold-typescript-cli/issues/18)) ([4d89f06](https://github.com/alrayyes/scaffold-typescript-cli/commit/4d89f06790c1db103848b8bf76f1df8117d860d9))
+* **deps:** downgrade bun.lock to lockfileVersion 1 for Dependabot ([#19](https://github.com/alrayyes/scaffold-typescript-cli/issues/19)) ([1361c88](https://github.com/alrayyes/scaffold-typescript-cli/commit/1361c88eade04814636aef5246bee7d708d3fd0c))
+
 ## [0.1.1](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.1.0...scaffold-typescript-cli-v0.1.1) (2026-09-01)
 
 
