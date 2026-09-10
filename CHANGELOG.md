@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.2.0...scaffold-typescript-cli-v0.2.1) (2026-09-10)
+
+
+### Bug Fixes
+
+* **ci:** report_type is underscore-separated, not report-type ([#27](https://github.com/alrayyes/scaffold-typescript-cli/issues/27)) ([2ec3229](https://github.com/alrayyes/scaffold-typescript-cli/commit/2ec32298cfc2632751fe24234a0ef58b4508c7c7))
+
 ## [0.2.0](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.1.2...scaffold-typescript-cli-v0.2.0) (2026-09-10)
 
 
