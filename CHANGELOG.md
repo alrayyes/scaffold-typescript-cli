@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.1.2...scaffold-typescript-cli-v0.2.0) (2026-09-10)
+
+
+### Features
+
+* **ci:** add Codecov Test Analytics ([#25](https://github.com/alrayyes/scaffold-typescript-cli/issues/25)) ([242592c](https://github.com/alrayyes/scaffold-typescript-cli/commit/242592c0fe95ea9d3774406db47eff1e5ac74f3f)), closes [#22](https://github.com/alrayyes/scaffold-typescript-cli/issues/22)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump the bun-dependencies group with 3 updates ([#24](https://github.com/alrayyes/scaffold-typescript-cli/issues/24)) ([f0a9aff](https://github.com/alrayyes/scaffold-typescript-cli/commit/f0a9aff4ec5bc2abd39655ddea2214cff01bf067))
+
 ## [0.1.2](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.1.1...scaffold-typescript-cli-v0.1.2) (2026-09-09)
 
 
