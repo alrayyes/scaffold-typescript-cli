@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.2.1...scaffold-typescript-cli-v0.2.2) (2026-09-14)
+
+
+### Bug Fixes
+
+* **ci:** skip Codecov upload on Dependabot-triggered runs ([#31](https://github.com/alrayyes/scaffold-typescript-cli/issues/31)) ([7aa4c99](https://github.com/alrayyes/scaffold-typescript-cli/commit/7aa4c99d876ca6976105ea7c2eba24f62cf2cb65)), closes [#30](https://github.com/alrayyes/scaffold-typescript-cli/issues/30)
+
 ## [0.2.1](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.2.0...scaffold-typescript-cli-v0.2.1) (2026-09-10)
 
 
