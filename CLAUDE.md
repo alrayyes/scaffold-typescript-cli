@@ -69,8 +69,9 @@ Full list and what each one does: [CONTRIBUTING.md](CONTRIBUTING.md).
   the `ubuntu-24.04` runner** — no daemon-discovery dance through
   `/proc/net/route` the way the Forgejo scaffold's docker-in-docker runner
   needs; GitHub's hosted runner ships Docker ready to use.
-- **`CODECOV_TOKEN` isn't set on this repo yet.** `ci.yml`'s `test` job
-  uploads coverage with `fail_ci_if_error: false` until Ryan signs into
-  `codecov.io` and hands over a token (`gh secret set CODECOV_TOKEN --repo
-alrayyes/scaffold-typescript-cli`) — flip that to `true` once it's real,
-  per `skills/repo-creation`'s Codecov section.
+- **`CODECOV_TOKEN` is a real Actions secret**, and `ci.yml`'s two upload
+  steps run with `fail_ci_if_error: true` accordingly. GitHub never passes
+  Actions secrets to a Dependabot-triggered run, though (only Dependabot's
+  own separate secrets store), so both steps skip for
+  `github.actor == 'dependabot[bot]'` instead of failing the whole job on
+  a token that run structurally can never have.
