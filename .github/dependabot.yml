@@ -27,12 +27,16 @@ updates:
     open-pull-requests-limit: 10
     commit-message:
       # Conventional Commits, because commitlint checks these messages and
-      # the version number is computed from them. package.json's own
-      # dependencies ship in what this CLI runs, so a bump here is a change
-      # to what ships whether or not it's security-relevant, and fix: cuts
-      # the patch release the same way any other fix does. github-actions
-      # below stays ci: — it changes the pipeline, not the artefact.
+      # the version number is computed from them. A `dependencies` bump
+      # ships in what this CLI runs, so it's a change to what ships
+      # whether or not it's security-relevant, and fix: cuts the patch
+      # release the same way any other fix does. A `devDependencies` bump
+      # (biome, commitlint, lefthook, markdownlint-cli2, prettier,
+      # sort-package-json) never ships, so it stays chore: and releases
+      # nothing. github-actions below stays ci: — it changes the
+      # pipeline, not the artefact.
       prefix: fix
+      prefix-development: chore
       include: scope
     groups:
       bun-dependencies:
