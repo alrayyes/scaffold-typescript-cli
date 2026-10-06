@@ -84,6 +84,17 @@ A Docker image ships alongside the script — no bun install needed:
 docker run --rm ghcr.io/alrayyes/scaffold-typescript-cli:latest --name Ada
 ```
 
+## Reports
+
+CI publishes the test and coverage reports on every push to `main`, at
+`https://<owner>.github.io/<repo>/reports/`. Test results are `unit.xml`, in
+the `junit` format, under `tests/`. Coverage has an HTML view, a
+`coverage.xml` file in `cobertura` format, and bun's own `lcov.info`, all
+under `coverage/`. Pull requests build the same files but deploy nothing.
+
+Turn it on once in a new repo, under the repo's Pages settings: set the
+source to GitHub Actions. The `pages` job fails until you do.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the toolchain, the hooks, and how
