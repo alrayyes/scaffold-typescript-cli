@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.2.3...scaffold-typescript-cli-v0.2.4) (2026-10-09)
+
+
+### Bug Fixes
+
+* **hooks:** drop docker build from pre-commit ([#45](https://github.com/alrayyes/scaffold-typescript-cli/issues/45)) ([7160e6d](https://github.com/alrayyes/scaffold-typescript-cli/commit/7160e6de8d1e7ac8b27a72bbbc6f00270ff53f44))
+
 ## [0.2.3](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.2.2...scaffold-typescript-cli-v0.2.3) (2026-10-06)
 
 
