@@ -23,7 +23,9 @@ pre-commit:
 
     - name: markdownlint
       glob: "*.md"
-      run: bunx markdownlint-cli2 {staged_files}
+      # --no-globs: the `globs` in .markdownlint-cli2.yaml are added to any
+      # file list, so without it this lints the whole tree, not the commit.
+      run: bunx markdownlint-cli2 --no-globs {staged_files}
 
     - name: sort-package-json
       glob: "package.json"
@@ -53,16 +55,8 @@ pre-commit:
         hadolint/hadolint@sha256:32dac94127fd60b7b7e3fbfc65e1383b9b5e25c9bfd7b8536de7a539fe68a12d
         < Dockerfile
 
-    # hadolint reads the Dockerfile as text and never proves it actually
-    # builds. Scoped to what actually changes the build, not every commit,
-    # so it's skipped rather than slow on one that doesn't touch it.
-    - name: docker-build
-      glob:
-        - "Dockerfile"
-        - "*.ts"
-        - "package.json"
-        - "bun.lock"
-      run: docker build -t scaffold-typescript-cli:pre-commit-check .
+    # The image build runs at pre-push and in CI, not here: it doesn't look at
+    # the commit and costs seconds on every one (rules/linting.md).
 
 commit-msg:
   jobs:
