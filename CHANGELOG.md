@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.5](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.2.4...scaffold-typescript-cli-v0.2.5) (2026-10-15)
+
+
+### Bug Fixes
+
+* **ci:** run release-auto-merge when the autorelease label is added ([#50](https://github.com/alrayyes/scaffold-typescript-cli/issues/50)) ([09d78b7](https://github.com/alrayyes/scaffold-typescript-cli/commit/09d78b75aa5fc54a76535c5b25b500785fc34632)), closes [#49](https://github.com/alrayyes/scaffold-typescript-cli/issues/49)
+
 ## [0.2.4](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.2.3...scaffold-typescript-cli-v0.2.4) (2026-10-09)
 
 
