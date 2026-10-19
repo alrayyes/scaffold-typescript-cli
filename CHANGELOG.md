@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.6](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.2.5...scaffold-typescript-cli-v0.2.6) (2026-10-19)
+
+
+### Bug Fixes
+
+* **deps:** bump oven/bun ([#52](https://github.com/alrayyes/scaffold-typescript-cli/issues/52)) ([43cc26e](https://github.com/alrayyes/scaffold-typescript-cli/commit/43cc26e287aab77b7aa98404bfa1d5f576128210))
+
 ## [0.2.5](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.2.4...scaffold-typescript-cli-v0.2.5) (2026-10-15)
 
 
