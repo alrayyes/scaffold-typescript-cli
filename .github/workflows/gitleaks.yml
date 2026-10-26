@@ -35,6 +35,8 @@ jobs:
       # Scoped to branches and tags rather than every ref: GitHub keeps a
       # permanent refs/pull/<n>/head per pull request, which a rewritten
       # history would still leave pointing at pre-rewrite commits.
+      # The full scan is deliberate: this repo is small enough that it costs
+      # milliseconds, so no range scan is needed (rules/secrets.md).
       - name: Scan the history
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
