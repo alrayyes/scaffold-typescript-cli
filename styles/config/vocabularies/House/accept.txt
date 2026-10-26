@@ -4,6 +4,7 @@ Codecov
 Dependabot
 Forgejo
 GHCR
+gitleaks
 GitHub
 Biome
 bundler
