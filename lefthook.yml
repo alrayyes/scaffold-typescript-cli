@@ -55,6 +55,11 @@ pre-commit:
         hadolint/hadolint@sha256:32dac94127fd60b7b7e3fbfc65e1383b9b5e25c9bfd7b8536de7a539fe68a12d
         < Dockerfile
 
+    # The index, not the tree: what is about to be committed. Needs gitleaks
+    # on PATH (CONTRIBUTING.md).
+    - name: gitleaks
+      run: gitleaks git --staged --redact --no-banner
+
     # The image build runs at pre-push and in CI, not here: it doesn't look at
     # the commit and costs seconds on every one (rules/linting.md).
 
@@ -109,3 +114,8 @@ pre-push:
     # anything.
     - name: docker-build
       run: docker build -t scaffold-typescript-cli:pre-push-check .
+
+    # The whole history: this repo is small, so a full scan costs seconds and
+    # the ranges rules/secrets.md describes would add nothing.
+    - name: gitleaks
+      run: gitleaks git --redact --no-banner

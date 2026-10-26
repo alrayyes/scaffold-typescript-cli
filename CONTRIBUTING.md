@@ -18,6 +18,10 @@ for whoever stamps a project out of it.
   `ltex-cli-plus` needs nothing installed: the hook fetches and caches it
   on first use.
 
+- **[gitleaks](https://github.com/gitleaks/gitleaks)** on your `PATH`, for
+  the secret scan the pre-commit and pre-push hooks run. CI runs the same
+  version from a pinned image.
+
 One command installs the linter, the git hooks, and their dependencies:
 
 ```sh
