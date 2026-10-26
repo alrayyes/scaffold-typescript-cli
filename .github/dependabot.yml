@@ -10,11 +10,11 @@
 # a floating range drifts silently and there's nothing to raise a pull
 # request about.
 #
-# Three pins Dependabot can't see, and which are updated by hand: the base
-# image in the Dockerfile (oven/bun), the hadolint image digest in
-# lefthook.yml/ci.yml, and the gitleaks image in the gitleaks.yml job
-# container. All are digest-pinned and none lives anywhere Dependabot's
-# ecosystems look.
+# Two pins Dependabot can't see, and which are updated by hand: the base
+# image in the Dockerfile (oven/bun) and the hadolint image digest in
+# lefthook.yml/ci.yml. Both are digest-pinned and neither lives anywhere
+# Dependabot's ecosystems look. The gitleaks image is tracked through the stub
+# Dockerfile in .github/gitleaks/, which gitleaks.yml builds.
 version: 2
 
 updates:
@@ -90,3 +90,17 @@ updates:
       docker-major:
         patterns: ["*"]
         update-types: [major]
+
+  # The stub Dockerfile that pins gitleaks for .github/workflows/gitleaks.yml.
+  # Dependabot doesn't read a workflow's `container:`, so the pin lives here.
+  # ci: because it changes the pipeline, not what ships.
+  - package-ecosystem: docker
+    directory: /.github/gitleaks
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Amsterdam
+    commit-message:
+      prefix: ci
+      include: scope
