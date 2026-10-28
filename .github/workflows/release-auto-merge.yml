@@ -27,7 +27,9 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # False, not true: the opened run skips (no label yet) and would cancel the
+  # labeled run that actually arms auto-merge a second later.
+  cancel-in-progress: false
 
 jobs:
   auto-merge:
