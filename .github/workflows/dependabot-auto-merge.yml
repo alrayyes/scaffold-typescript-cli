@@ -9,9 +9,7 @@
 # pull_request_target would trade that away for nothing.
 name: dependabot-auto-merge
 
-on:
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
+on: pull_request
 
 permissions:
   contents: write
@@ -23,7 +21,7 @@ concurrency:
 
 jobs:
   auto-merge:
-    if: github.actor == 'dependabot[bot]' && github.event.action != 'closed'
+    if: github.actor == 'dependabot[bot]'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
@@ -45,27 +43,4 @@ jobs:
         run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # GitHub's auto-merge lands the commit as GITHUB_TOKEN, and events caused by
-  # GITHUB_TOKEN don't trigger workflows, so main got no ci or release run for
-  # any Dependabot merge. workflow_dispatch is the one exception to that rule.
-  # Dependabot runs can't read the RELEASE_TOKEN Actions secret, so a PAT
-  # isn't an option here. Keyed on the PR author, not the actor: the closed
-  # event's actor is whoever merged it, which is github-actions.
-  run-main-checks:
-    if: |
-      github.event.action == 'closed' &&
-      github.event.pull_request.merged &&
-      github.event.pull_request.user.login == 'dependabot[bot]'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    permissions:
-      actions: write
-    steps:
-      - name: Dispatch ci and release on main
-        run: |
-          gh workflow run ci.yml --ref main --repo "$GITHUB_REPOSITORY"
-          gh workflow run release.yml --ref main --repo "$GITHUB_REPOSITORY"
-        env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

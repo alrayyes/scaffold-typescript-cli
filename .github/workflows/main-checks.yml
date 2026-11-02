@@ -1,0 +1,35 @@
+# Auto-merge lands Dependabot's pull requests as GITHUB_TOKEN, and events that
+# token causes (push, pull_request closed, ...) trigger no workflows, so main
+# got no ci or release run for them. workflow_dispatch is the one exception.
+# Dependabot runs can't read Actions secrets, so a PAT can't arm the merge
+# either. This notices a main head with no ci run and dispatches both.
+name: main-checks
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+concurrency:
+  group: main-checks
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Dispatch ci and release if main's head has no ci run
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -eu
+          sha="$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)"
+          runs="$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?head_sha=$sha" --jq .total_count)"
+          if [ "$runs" -eq 0 ]; then
+            gh workflow run ci.yml --ref main --repo "$GITHUB_REPOSITORY"
+            gh workflow run release.yml --ref main --repo "$GITHUB_REPOSITORY"
+          fi
