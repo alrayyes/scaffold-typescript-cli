@@ -8,6 +8,8 @@ name: release
 on:
   push:
     branches: [main]
+  # Fired by dependabot-auto-merge.yml, same reason as ci.yml.
+  workflow_dispatch:
 
 permissions:
   contents: read
