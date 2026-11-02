@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.9](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.2.8...scaffold-typescript-cli-v0.2.9) (2026-11-02)
+
+
+### Bug Fixes
+
+* **ci:** run ci and release on main after a Dependabot merge ([#69](https://github.com/alrayyes/scaffold-typescript-cli/issues/69)) ([e18b0c4](https://github.com/alrayyes/scaffold-typescript-cli/commit/e18b0c4941a0f454f6217e299ba3839b3ff72204))
+
 ## [0.2.8](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.2.7...scaffold-typescript-cli-v0.2.8) (2026-10-28)
 
 
