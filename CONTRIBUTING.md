@@ -48,11 +48,16 @@ bun run format               # biome check --write ., the fixer
 bun run format:check        # prettier --check, add --write to fix
 bun run lint:md
 bun run lint:prose          # vale
-bun run lint:mechanics      # ltex-cli-plus
+bun run lint:mechanics      # ltex-cli-plus, every document
 
 hadolint Dockerfile
 docker build -t scaffold-typescript-cli:local .
 ```
+
+The pre-push hook runs the grammar and spelling check only on the Markdown in
+your push, and on all of it when `.ltex.json` or `scripts/lint-mechanics.sh`
+changed, so a push with no prose never starts the JVM. CI and a bare
+`bun run lint:mechanics` check every document.
 
 ## How it fits together
 
