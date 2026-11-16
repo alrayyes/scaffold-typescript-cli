@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.10](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.2.9...scaffold-typescript-cli-v0.2.10) (2026-11-16)
+
+
+### Bug Fixes
+
+* **deps:** bump the bun-dependencies group with 4 updates ([#75](https://github.com/alrayyes/scaffold-typescript-cli/issues/75)) ([6ae0211](https://github.com/alrayyes/scaffold-typescript-cli/commit/6ae0211ee23c3c73264d2b9261788e652b374d36))
+
 ## [0.2.9](https://github.com/alrayyes/scaffold-typescript-cli/compare/scaffold-typescript-cli-v0.2.8...scaffold-typescript-cli-v0.2.9) (2026-11-02)
 
 
